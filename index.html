@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>রাজেশ মজুমদার ডিজিটাল ২৪ - স্মার্ট পোর্টাল</title>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
@@ -17,7 +18,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #f1f5f9; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* সাইডবার (আপনার আগের ফাইল থেকে) */
+        /* সাইডবার */
         .navigation {
             position: fixed; top: 20px; left: 20px; bottom: 20px;
             width: 70px; background: #fff; border-radius: 10px;
@@ -31,11 +32,11 @@
         .navigation ul li a .icon { min-width: 60px; height: 60px; line-height: 70px; font-size: 1.5em; text-align: center; }
         .navigation ul li a .title { padding: 0 10px; white-space: nowrap; font-weight: bold; }
 
-        /* লগইন সেকশন */
+        /* লগইন বক্স */
         #auth-section { display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--dark-bg); }
         .container {
             background-color: #fff; border-radius: 15px; box-shadow: 0 14px 28px rgba(0,0,0,0.2);
-            position: relative; overflow: hidden; width: 768px; height: 520px; display: flex;
+            position: relative; overflow: hidden; width: 768px; height: 550px; display: flex;
         }
         .form-container { position: absolute; top: 0; height: 100%; transition: all 0.6s ease-in-out; }
         .sign-in-container { left: 0; width: 50%; z-index: 2; }
@@ -45,13 +46,14 @@
 
         form { background: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 40px; height: 100%; text-align: center; }
         input { background: #eee; border: none; padding: 12px 15px; margin: 6px 0; width: 100%; border-radius: 8px; outline: none; }
-        .btn { border-radius: 20px; border: 1px solid var(--fino-blue); background: var(--fino-blue); color: #fff; padding: 10px 40px; cursor: pointer; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+        .btn { border-radius: 20px; border: 1px solid var(--fino-blue); background: var(--fino-blue); color: #fff; padding: 10px 40px; cursor: pointer; font-weight: bold; margin-top: 10px; text-transform: uppercase; transition: 0.3s; }
+        .btn:hover { background: var(--fino-red); border-color: var(--fino-red); }
 
         /* সোশ্যাল লগইন আইকন */
-        .social-login { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .social-icon { width: 40px; height: 40px; border: 1px solid #ddd; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
+        .social-login { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        .social-icon { width: 45px; height: 45px; border: 1px solid #ddd; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
         .social-icon:hover { background: #f1f1f1; transform: translateY(-3px); }
-        .social-icon img { width: 22px; }
+        .social-icon img { width: 25px; }
 
         .overlay-container { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; overflow: hidden; transition: transform 0.6s; z-index: 100; }
         .container.active .overlay-container { transform: translateX(-100%); }
@@ -60,25 +62,25 @@
         .overlay-panel { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 40px; text-align: center; height: 100%; width: 50%; }
         .overlay-right { right: 0; }
 
-        /* ড্যাশবোর্ড হেডার (কালো অংশ পরিবর্তন) */
+        /* ড্যাশবোর্ড হেডার পরিবর্তন */
         #main-dashboard { display: none; }
         .header-banner { 
-            height: 130px; background: #fff; display: flex; align-items: center; 
-            justify-content: center; color: #333; border-bottom: 4px solid var(--fino-red);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: #fff; padding: 30px; text-align: center; border-bottom: 5px solid var(--fino-red);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .display-area { padding: 30px 30px 30px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .s-card { background: white; padding: 20px; border-radius: 12px; text-align: center; text-decoration: none; color: #333; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-bottom: 4px solid var(--fino-red); transition: 0.3s; }
+        .display-area { padding: 30px 30px 30px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        .s-card { background: white; padding: 25px; border-radius: 15px; text-align: center; text-decoration: none; color: #333; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-bottom: 4px solid var(--fino-red); transition: 0.3s; }
+        .s-card:hover { transform: translateY(-5px); background: #f8f9fa; }
     </style>
 </head>
 <body>
 
     <div class="navigation" id="mainSidebar">
         <ul>
-            <li onclick="showTab('home')"><a><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">হোম পেজ</span></a></li>
-            <li onclick="showTab('services')"><a><span class="icon"><ion-icon name="grid-outline"></ion-icon></span><span class="title">সব সার্ভিস লিঙ্ক</span></a></li>
-            <li><a onclick="logout()"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">লগ আউট</span></a></li>
+            <li><a><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">হোম পেজ</span></a></li>
+            <li><a><span class="icon"><ion-icon name="grid-outline"></ion-icon></span><span class="title">সব সার্ভিস</span></a></li>
+            <li onclick="logout()"><a><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">লগ আউট</span></a></li>
         </ul>
     </div>
 
@@ -86,32 +88,32 @@
         <div class="container" id="loginBox">
             <div class="form-container sign-up-container">
                 <form>
-                    <h1>নতুন অ্যাকাউন্ট</h1>
-                    <input type="text" placeholder="নাম">
-                    <input type="email" placeholder="ইমেইল">
-                    <input type="password" placeholder="পাসওয়ার্ড">
-                    <button type="button" class="btn">সাইন আপ</button>
+                    <h1>Create Account</h1>
+                    <input type="text" placeholder="Full Name">
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <button type="button" class="btn">Sign Up</button>
                 </form>
             </div>
             <div class="form-container sign-in-container">
                 <form>
-                    <h2 style="color:var(--fino-blue)">রাজেশ ডিজিটাল ২৪</h2>
-                    <p>লগইন করুন</p>
-                    <input type="text" id="user" placeholder="ইমেইল বা ইউজার আইডি">
-                    <input type="password" id="pass" placeholder="পাসওয়ার্ড">
-                    <button type="button" class="btn" onclick="loginAction()">প্রবেশ করুন</button>
+                    <h2 style="color:var(--fino-blue); margin-bottom:10px;">রাজেশ ডিজিটাল ২৪</h2>
+                    <input type="email" id="email-field" placeholder="ইমেইল অ্যাড্রেস">
+                    <input type="password" id="pass-field" placeholder="পাসওয়ার্ড">
+                    <button type="button" class="btn" onclick="emailLogin()">Login</button>
                     
+                    <p style="margin-top: 15px; font-size: 14px; color: #666;">অথবা লগইন করুন</p>
                     <div class="social-login">
-                        <div class="social-icon" onclick="googleLogin()"><img src="https://img.icons8.com/color/48/000000/google-logo.png" title="Gmail"></div>
-                        <div class="social-icon" onclick="facebookLogin()"><img src="https://img.icons8.com/color/48/000000/facebook-new.png" title="Facebook"></div>
-                        <div class="social-icon" onclick="phoneLogin()"><img src="https://img.icons8.com/ios-filled/50/d9411e/phone.png" title="Phone"></div>
+                        <div class="social-icon" onclick="googleLogin()" title="Gmail Login"><img src="https://img.icons8.com/color/48/000000/google-logo.png"></div>
+                        <div class="social-icon" onclick="facebookLogin()" title="Facebook Login"><img src="https://img.icons8.com/color/48/000000/facebook-new.png"></div>
+                        <div class="social-icon" onclick="phoneLogin()" title="Phone Login"><img src="https://img.icons8.com/ios-filled/50/d9411e/phone.png"></div>
                     </div>
                 </form>
             </div>
             <div class="overlay-container">
                 <div class="overlay">
-                    <div class="overlay-panel overlay-left"><h1>ফিরে এসেছেন?</h1><button class="btn" id="signIn" style="background:transparent; border:1px solid #fff;">লগইন</button></div>
-                    <div class="overlay-panel overlay-right"><h1>স্বাগতম!</h1><button class="btn" id="signUp" style="background:transparent; border:1px solid #fff;">সাইন আপ</button></div>
+                    <div class="overlay-panel overlay-left"><h1>Welcome Back!</h1><button class="btn" id="signIn" style="background:transparent; border:1px solid #fff;">Login</button></div>
+                    <div class="overlay-panel overlay-right"><h1>Hello, Friend!</h1><button class="btn" id="signUp" style="background:transparent; border:1px solid #fff;">Sign Up</button></div>
                 </div>
             </div>
         </div>
@@ -119,28 +121,34 @@
 
     <div id="main-dashboard">
         <div class="header-banner">
-            <div style="text-align:center;">
-                <h1 style="color:var(--fino-blue)">রাজেশ মজুমদার ডিজিটাল ২৪</h1>
-                <p>📍 তাহেরপুর, নদীয়া | মোবাইল: ৯৩৩২৭৪৯৬৯১</p>
-            </div>
+            <h1 style="color:var(--fino-blue); font-size: 2.5em;">রাজেশ মজুমদার ডিজিটাল ২৪</h1>
+            <p style="font-size: 1.2em; color: #555; margin-top: 5px;">📍 তাহেরপুর, নদীয়া | স্মার্ট পোর্টাল সার্ভিস</p>
         </div>
 
-        <div style="background: var(--fino-red); color: white; padding: 8px;">
-            <marquee>🔥 আধার কার্ড, ভোটার কার্ড ও সব ধরণের অনলাইন কাজ যত্ন সহকারে করা হয়।</marquee>
+        <div style="background: var(--fino-red); color: white; padding: 10px;">
+            <marquee font-size="18px">🔥 আমাদের এখানে আধার, ভোটার, প্যান কার্ড এবং সব ধরণের অনলাইন ফর্ম ফিলাপ করা হয়।</marquee>
         </div>
 
-        <div id="home" class="tab-content active">
-            <div class="display-area">
-                <div style="grid-column: 1/-1; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                    <h2>হ্যালো রাজেশ!</h2>
-                    <p>আপনার স্মার্ট ড্যাশবোর্ডে স্বাগতম।</p>
-                </div>
-            </div>
+        <div class="display-area">
+            <a href="#" class="s-card">আধার সার্ভিস</a>
+            <a href="#" class="s-card">ভোটার কার্ড</a>
+            <a href="#" class="s-card">প্যান কার্ড</a>
+            <a href="#" class="s-card">বাংলার ভূমি</a>
         </div>
     </div>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script>
+        // আপনার ফায়ারবেস কনফিগারেশন [সংশোধিত]
+        const firebaseConfig = {
+            apiKey: "AIzaSyCP9481acfFCRGdlFj_LRYdKntFHaO7_7o",
+            authDomain: "sonali-digital.firebaseapp.com",
+            projectId: "sonali-digital",
+            appId: "1:1034891659161:web:1848d98243bc9241857508"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // স্লাইডিং অ্যানিমেশন লজিক
         const signUpBtn = document.getElementById('signUp');
         const signInBtn = document.getElementById('signIn');
         const container = document.getElementById('loginBox');
@@ -148,11 +156,31 @@
         signUpBtn.onclick = () => container.classList.add("active");
         signInBtn.onclick = () => container.classList.remove("active");
 
-        function loginAction() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            if(u === "rajesh" && p === "123") { showDashboard(); }
-            else { alert("ভুল তথ্য!"); }
+        // ১. গুগল লগইন (জিমেইল সিলেক্ট করার অপশন সহ)
+        function googleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            firebase.auth().signInWithPopup(provider).then(() => showDashboard());
+        }
+
+        // ২. ফেসবুক লগইন
+        function facebookLogin() {
+            const provider = new firebase.auth.FacebookAuthProvider();
+            firebase.auth().signInWithPopup(provider).then(() => showDashboard());
+        }
+
+        // ৩. ইমেইল/পাসওয়ার্ড লগইন
+        function emailLogin() {
+            const email = document.getElementById('email-field').value;
+            const pass = document.getElementById('pass-field').value;
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+            .then(() => showDashboard())
+            .catch(err => alert("ভুল ইমেইল বা পাসওয়ার্ড!"));
+        }
+
+        // ৪. ফোন লগইন
+        function phoneLogin() {
+            alert("ফোন OTP সিস্টেম কনফিগার করতে হবে। বর্তমানে এটি ডেভেলপমেন্ট মোডে আছে।");
         }
 
         function showDashboard() {
@@ -161,11 +189,6 @@
             document.getElementById('main-dashboard').style.display = "block";
         }
 
-        // সামাজিক লগইন ডামি ফাংশন (এগুলো আপনার ফায়ারবেসের সাথে কানেক্ট হবে)
-        function googleLogin() { alert("গুগল লগইন চালু হচ্ছে..."); showDashboard(); }
-        function facebookLogin() { alert("ফেসবুক লগইন চালু হচ্ছে..."); showDashboard(); }
-        function phoneLogin() { alert("ফোন OTP সিস্টেম চালু হচ্ছে..."); showDashboard(); }
-        
         function logout() { location.reload(); }
     </script>
 </body>
