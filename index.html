@@ -3,137 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital 24 - Smart Portal</title>
+    <title>রাজেশ মজুমদার ডিজিটাল ২৪ - স্মার্ট পোর্টাল</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body {
-            height: 100vh; display: flex; justify-content: center; align-items: center;
-            background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e') no-repeat center center/cover;
-        }
-        .container {
-            position: relative; width: 400px; height: 600px;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
-            border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.3); overflow: hidden;
-        }
-        .form-container { position: absolute; width: 100%; padding: 40px; transition: 0.5s; }
-        #login-form { left: 0; }
-        #register-form { left: 100%; }
-        .active-reg #login-form { left: -100%; }
-        .active-reg #register-form { left: 0; }
 
-        h2 { color: #fff; text-align: center; margin-bottom: 20px; }
-        input {
-            width: 100%; padding: 12px 20px; margin: 10px 0;
-            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 35px; color: #fff; outline: none;
+    <style>
+        :root {
+            --fino-red: #d9411e;
+            --fino-blue: #1e3a8a;
+            --dark-bg: #0b0e14;
         }
-        .main-btn {
-            width: 100%; padding: 12px; background: #fff; border: none;
-            border-radius: 35px; font-weight: 600; cursor: pointer; margin-top: 10px;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #f1f5f9; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
+
+        /* সাইডবার (আপনার আগের ফাইল থেকে) */
+        .navigation {
+            position: fixed; top: 20px; left: 20px; bottom: 20px;
+            width: 70px; background: #fff; border-radius: 10px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1); display: none;
+            flex-direction: column; transition: width 0.5s; overflow: hidden; z-index: 1000;
         }
-        .social-login { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .social-icon {
-            width: 45px; height: 45px; background: rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; transition: 0.3s;
+        .navigation:hover { width: 250px; }
+        .navigation ul { width: 100%; padding: 20px 5px; }
+        .navigation ul li { list-style: none; width: 100%; height: 60px; cursor: pointer; }
+        .navigation ul li a { display: flex; align-items: center; text-decoration: none; color: #222327; }
+        .navigation ul li a .icon { min-width: 60px; height: 60px; line-height: 70px; font-size: 1.5em; text-align: center; }
+        .navigation ul li a .title { padding: 0 10px; white-space: nowrap; font-weight: bold; }
+
+        /* লগইন সেকশন */
+        #auth-section { display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--dark-bg); }
+        .container {
+            background-color: #fff; border-radius: 15px; box-shadow: 0 14px 28px rgba(0,0,0,0.2);
+            position: relative; overflow: hidden; width: 768px; height: 520px; display: flex;
         }
-        .social-icon:hover { background: #fff; transform: scale(1.1); }
-        .social-icon img { width: 25px; }
-        .toggle-text { color: #fff; text-align: center; margin-top: 20px; font-size: 14px; }
-        .toggle-text span { color: #ffeb3b; cursor: pointer; font-weight: bold; }
-        
-        /* ড্যাশবোর্ড স্টাইল */
-        #dashboard { display: none; color: white; text-align: center; padding: 20px; }
-        .stat-box { background: rgba(255,255,255,0.2); padding: 15px; border-radius: 15px; margin: 10px 0; }
+        .form-container { position: absolute; top: 0; height: 100%; transition: all 0.6s ease-in-out; }
+        .sign-in-container { left: 0; width: 50%; z-index: 2; }
+        .sign-up-container { left: 0; width: 50%; opacity: 0; z-index: 1; }
+        .container.active .sign-in-container { transform: translateX(100%); }
+        .container.active .sign-up-container { transform: translateX(100%); opacity: 1; z-index: 5; }
+
+        form { background: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 40px; height: 100%; text-align: center; }
+        input { background: #eee; border: none; padding: 12px 15px; margin: 6px 0; width: 100%; border-radius: 8px; outline: none; }
+        .btn { border-radius: 20px; border: 1px solid var(--fino-blue); background: var(--fino-blue); color: #fff; padding: 10px 40px; cursor: pointer; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+
+        /* সোশ্যাল লগইন আইকন */
+        .social-login { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .social-icon { width: 40px; height: 40px; border: 1px solid #ddd; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
+        .social-icon:hover { background: #f1f1f1; transform: translateY(-3px); }
+        .social-icon img { width: 22px; }
+
+        .overlay-container { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; overflow: hidden; transition: transform 0.6s; z-index: 100; }
+        .container.active .overlay-container { transform: translateX(-100%); }
+        .overlay { background: linear-gradient(to right, #1e3a8a, #d9411e); color: #fff; position: relative; left: -100%; height: 100%; width: 200%; transition: transform 0.6s; }
+        .container.active .overlay { transform: translateX(50%); }
+        .overlay-panel { position: absolute; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 40px; text-align: center; height: 100%; width: 50%; }
+        .overlay-right { right: 0; }
+
+        /* ড্যাশবোর্ড হেডার (কালো অংশ পরিবর্তন) */
+        #main-dashboard { display: none; }
+        .header-banner { 
+            height: 130px; background: #fff; display: flex; align-items: center; 
+            justify-content: center; color: #333; border-bottom: 4px solid var(--fino-red);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .display-area { padding: 30px 30px 30px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .s-card { background: white; padding: 20px; border-radius: 12px; text-align: center; text-decoration: none; color: #333; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-bottom: 4px solid var(--fino-red); transition: 0.3s; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-box">
-        <div class="form-container" id="login-form">
-            <h2>Digital 24 Login</h2>
-            <input type="email" id="log-email" placeholder="Email">
-            <input type="password" id="log-pass" placeholder="Password">
-            <button class="main-btn" onclick="emailLogin()">Login</button>
-            
-            <div class="social-login">
-                <div class="social-icon" onclick="googleLogin()"><img src="https://img.icons8.com/color/48/000000/google-logo.png"></div>
-                <div class="social-icon" onclick="githubLogin()"><img src="https://img.icons8.com/ios-filled/50/ffffff/github.png"></div>
-                <div class="social-icon" onclick="phoneLogin()"><img src="https://img.icons8.com/ios-filled/50/ffffff/phone.png"></div>
-            </div>
-            <p class="toggle-text">নতুন? <span onclick="toggleMode()">রেজিস্টার করুন</span></p>
-        </div>
+    <div class="navigation" id="mainSidebar">
+        <ul>
+            <li onclick="showTab('home')"><a><span class="icon"><ion-icon name="home-outline"></ion-icon></span><span class="title">হোম পেজ</span></a></li>
+            <li onclick="showTab('services')"><a><span class="icon"><ion-icon name="grid-outline"></ion-icon></span><span class="title">সব সার্ভিস লিঙ্ক</span></a></li>
+            <li><a onclick="logout()"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span><span class="title">লগ আউট</span></a></li>
+        </ul>
+    </div>
 
-        <div id="dashboard">
-            <h2>Welcome!</h2>
-            <p id="user-name"></p>
-            <hr><br>
-            <h3>ভিজিটর স্ট্যাটাস</h3>
-            <div class="stat-box">গুগল ইউজার: <span id="google-stat">0</span>%</div>
-            <div class="stat-box">গিটহাব ইউজার: <span id="github-stat">0</span>%</div>
-            <div class="stat-box">ফোন ইউজার: <span id="phone-stat">0</span>%</div>
-            <button class="main-btn" onclick="logout()">Logout</button>
+    <div id="auth-section">
+        <div class="container" id="loginBox">
+            <div class="form-container sign-up-container">
+                <form>
+                    <h1>নতুন অ্যাকাউন্ট</h1>
+                    <input type="text" placeholder="নাম">
+                    <input type="email" placeholder="ইমেইল">
+                    <input type="password" placeholder="পাসওয়ার্ড">
+                    <button type="button" class="btn">সাইন আপ</button>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form>
+                    <h2 style="color:var(--fino-blue)">রাজেশ ডিজিটাল ২৪</h2>
+                    <p>লগইন করুন</p>
+                    <input type="text" id="user" placeholder="ইমেইল বা ইউজার আইডি">
+                    <input type="password" id="pass" placeholder="পাসওয়ার্ড">
+                    <button type="button" class="btn" onclick="loginAction()">প্রবেশ করুন</button>
+                    
+                    <div class="social-login">
+                        <div class="social-icon" onclick="googleLogin()"><img src="https://img.icons8.com/color/48/000000/google-logo.png" title="Gmail"></div>
+                        <div class="social-icon" onclick="facebookLogin()"><img src="https://img.icons8.com/color/48/000000/facebook-new.png" title="Facebook"></div>
+                        <div class="social-icon" onclick="phoneLogin()"><img src="https://img.icons8.com/ios-filled/50/d9411e/phone.png" title="Phone"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left"><h1>ফিরে এসেছেন?</h1><button class="btn" id="signIn" style="background:transparent; border:1px solid #fff;">লগইন</button></div>
+                    <div class="overlay-panel overlay-right"><h1>স্বাগতম!</h1><button class="btn" id="signUp" style="background:transparent; border:1px solid #fff;">সাইন আপ</button></div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div id="main-dashboard">
+        <div class="header-banner">
+            <div style="text-align:center;">
+                <h1 style="color:var(--fino-blue)">রাজেশ মজুমদার ডিজিটাল ২৪</h1>
+                <p>📍 তাহেরপুর, নদীয়া | মোবাইল: ৯৩৩২৭৪৯৬৯১</p>
+            </div>
+        </div>
+
+        <div style="background: var(--fino-red); color: white; padding: 8px;">
+            <marquee>🔥 আধার কার্ড, ভোটার কার্ড ও সব ধরণের অনলাইন কাজ যত্ন সহকারে করা হয়।</marquee>
+        </div>
+
+        <div id="home" class="tab-content active">
+            <div class="display-area">
+                <div style="grid-column: 1/-1; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <h2>হ্যালো রাজেশ!</h2>
+                    <p>আপনার স্মার্ট ড্যাশবোর্ডে স্বাগতম।</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script>
-        // আপনার ফায়ারবেস কনফিগারেশন
-        const firebaseConfig = {
-            apiKey: "AIzaSyCP9481acfFCRGdlFj_LRYdKntFHaO7_7o",
-            authDomain: "sonali-digital.firebaseapp.com",
-            projectId: "sonali-digital",
-            databaseURL: "https://sonali-digital-default-rtdb.firebaseio.com",
-            appId: "1:1034891659161:web:1848d98243bc9241857508"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        const signUpBtn = document.getElementById('signUp');
+        const signInBtn = document.getElementById('signIn');
+        const container = document.getElementById('loginBox');
 
-        function toggleMode() { document.getElementById('main-box').classList.toggle('active-reg'); }
+        signUpBtn.onclick = () => container.classList.add("active");
+        signInBtn.onclick = () => container.classList.remove("active");
 
-        // গুগল লগইন
-        function googleLogin() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(res => updateStats('google'));
+        function loginAction() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(u === "rajesh" && p === "123") { showDashboard(); }
+            else { alert("ভুল তথ্য!"); }
         }
 
-        // গিটহাব লগইন
-        function githubLogin() {
-            const provider = new firebase.auth.GithubAuthProvider();
-            auth.signInWithPopup(provider).then(res => updateStats('github'));
+        function showDashboard() {
+            document.getElementById('auth-section').style.display = "none";
+            document.getElementById('mainSidebar').style.display = "flex";
+            document.getElementById('main-dashboard').style.display = "block";
         }
 
-        // লগইন স্ট্যাটাস আপডেট (ডাটাবেসে সেভ করা)
-        function updateStats(type) {
-            db.ref('stats/' + type).transaction(count => (count || 0) + 1);
-        }
-
-        // পারসেন্টেজ ক্যালকুলেশন
-        db.ref('stats').on('value', snap => {
-            const data = snap.val() || {google:0, github:0, phone:0};
-            const total = data.google + data.github + data.phone || 1;
-            document.getElementById('google-stat').innerText = ((data.google/total)*100).toFixed(1);
-            document.getElementById('github-stat').innerText = ((data.github/total)*100).toFixed(1);
-            document.getElementById('phone-stat').innerText = ((data.phone/total)*100).toFixed(1);
-        });
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                document.getElementById('user-name').innerText = user.displayName || user.email;
-            } else {
-                document.getElementById('login-form').style.display = 'block';
-                document.getElementById('dashboard').style.display = 'none';
-            }
-        });
-
-        function logout() { auth.signOut(); }
+        // সামাজিক লগইন ডামি ফাংশন (এগুলো আপনার ফায়ারবেসের সাথে কানেক্ট হবে)
+        function googleLogin() { alert("গুগল লগইন চালু হচ্ছে..."); showDashboard(); }
+        function facebookLogin() { alert("ফেসবুক লগইন চালু হচ্ছে..."); showDashboard(); }
+        function phoneLogin() { alert("ফোন OTP সিস্টেম চালু হচ্ছে..."); showDashboard(); }
+        
+        function logout() { location.reload(); }
     </script>
 </body>
 </html>
