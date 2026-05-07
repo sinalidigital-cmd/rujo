@@ -1,131 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital 24 - Smart Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-
+    <title>Digital 24 - Smart Portal</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body {
             height: 100vh; display: flex; justify-content: center; align-items: center;
-            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa') no-repeat center center/cover;
-            transition: 1s; overflow: hidden;
+            background: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e') no-repeat center center/cover;
         }
-        .card {
-            width: 380px; padding: 40px; background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center; color: white; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        .container {
+            position: relative; width: 400px; height: 600px;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
+            border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3); overflow: hidden;
         }
-        #dashboard { display: none; width: 80%; max-width: 800px; }
-        h2 { margin-bottom: 25px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group input {
-            width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.2);
-            border: none; border-radius: 10px; color: white; outline: none;
+        .form-container { position: absolute; width: 100%; padding: 40px; transition: 0.5s; }
+        #login-form { left: 0; }
+        #register-form { left: 100%; }
+        .active-reg #login-form { left: -100%; }
+        .active-reg #register-form { left: 0; }
+
+        h2 { color: #fff; text-align: center; margin-bottom: 20px; }
+        input {
+            width: 100%; padding: 12px 20px; margin: 10px 0;
+            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 35px; color: #fff; outline: none;
         }
-        .btn {
-            width: 100%; padding: 12px; background: #fff; color: #333;
-            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        .main-btn {
+            width: 100%; padding: 12px; background: #fff; border: none;
+            border-radius: 35px; font-weight: 600; cursor: pointer; margin-top: 10px;
         }
-        .btn:hover { background: #4caf50; color: white; }
-        .social-icons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        .social-icons i {
-            font-size: 22px; cursor: pointer; padding: 12px;
-            background: rgba(255,255,255,0.1); border-radius: 50%; transition: 0.3s;
+        .social-login { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .social-icon {
+            width: 45px; height: 45px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.3s;
         }
-        .social-icons i:hover { transform: scale(1.2); background: #fff; color: #333; }
+        .social-icon:hover { background: #fff; transform: scale(1.1); }
+        .social-icon img { width: 25px; }
+        .toggle-text { color: #fff; text-align: center; margin-top: 20px; font-size: 14px; }
+        .toggle-text span { color: #ffeb3b; cursor: pointer; font-weight: bold; }
         
-        /* Dashboard Layout */
-        .dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
-        .box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); }
+        /* ড্যাশবোর্ড স্টাইল */
+        #dashboard { display: none; color: white; text-align: center; padding: 20px; }
+        .stat-box { background: rgba(255,255,255,0.2); padding: 15px; border-radius: 15px; margin: 10px 0; }
     </style>
 </head>
-<body id="bg">
+<body>
 
-    <div class="card" id="loginPage">
-        <h2>Login to Digital 24</h2>
-        <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
-        <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
-        <button class="btn" onclick="emailLogin()">Login Now</button>
-
-        <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">Or login with</p>
-        <div class="social-icons">
-            <i class="fab fa-google" onclick="login('google')" title="Google"></i>
-            <i class="fab fa-facebook-f" onclick="login('facebook')" title="Facebook"></i>
-            <i class="fab fa-github" onclick="login('github')" title="GitHub"></i>
+    <div class="container" id="main-box">
+        <div class="form-container" id="login-form">
+            <h2>Digital 24 Login</h2>
+            <input type="email" id="log-email" placeholder="Email">
+            <input type="password" id="log-pass" placeholder="Password">
+            <button class="main-btn" onclick="emailLogin()">Login</button>
+            
+            <div class="social-login">
+                <div class="social-icon" onclick="googleLogin()"><img src="https://img.icons8.com/color/48/000000/google-logo.png"></div>
+                <div class="social-icon" onclick="githubLogin()"><img src="https://img.icons8.com/ios-filled/50/ffffff/github.png"></div>
+                <div class="social-icon" onclick="phoneLogin()"><img src="https://img.icons8.com/ios-filled/50/ffffff/phone.png"></div>
+            </div>
+            <p class="toggle-text">নতুন? <span onclick="toggleMode()">রেজিস্টার করুন</span></p>
         </div>
-    </div>
 
-    <div class="card" id="dashboard">
-        <h2 id="welcomeText">Welcome!</h2>
-        <p>You have successfully logged in to your dashboard.</p>
-        <div class="dash-grid">
-            <div class="box"><h4>Services</h4><p>Active</p></div>
-            <div class="box"><h4>Wallet</h4><p>₹ 0.00</p></div>
-            <div class="box"><h4>Status</h4><p>Online</p></div>
+        <div id="dashboard">
+            <h2>Welcome!</h2>
+            <p id="user-name"></p>
+            <hr><br>
+            <h3>ভিজিটর স্ট্যাটাস</h3>
+            <div class="stat-box">গুগল ইউজার: <span id="google-stat">0</span>%</div>
+            <div class="stat-box">গিটহাব ইউজার: <span id="github-stat">0</span>%</div>
+            <div class="stat-box">ফোন ইউজার: <span id="phone-stat">0</span>%</div>
+            <button class="main-btn" onclick="logout()">Logout</button>
         </div>
-        <button class="btn" onclick="logout()" style="margin-top: 20px; background: #ff4757; color: white;">Logout</button>
     </div>
 
     <script>
-        // 1. Firebase Configuration (এখানে আপনার নিজের ডাটা বসান)
+        // আপনার ফায়ারবেস কনফিগারেশন
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "your-project-id.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project-id.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyCP9481acfFCRGdlFj_LRYdKntFHaO7_7o",
+            authDomain: "sonali-digital.firebaseapp.com",
+            projectId: "sonali-digital",
+            databaseURL: "https://sonali-digital-default-rtdb.firebaseio.com",
+            appId: "1:1034891659161:web:1848d98243bc9241857508"
         };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.database();
 
-        // 2. Social Login Function
-        function login(type) {
-            let provider;
-            if(type === 'google') provider = new firebase.auth.GoogleAuthProvider();
-            if(type === 'facebook') provider = new firebase.auth.FacebookAuthProvider();
-            if(type === 'github') provider = new firebase.auth.GithubAuthProvider();
+        function toggleMode() { document.getElementById('main-box').classList.toggle('active-reg'); }
 
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    document.getElementById('welcomeText').innerText = "Welcome, " + result.user.displayName;
-                    showDashboard();
-                }).catch((error) => {
-                    alert(error.message);
-                });
+        // গুগল লগইন
+        function googleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then(res => updateStats('google'));
         }
 
-        // 3. Email/Password Login (Demo)
-        function emailLogin() {
-            // আসল ইমেইল লগইন এর জন্য auth.signInWithEmailAndPassword ব্যবহার করা যায়
-            showDashboard(); 
+        // গিটহাব লগইন
+        function githubLogin() {
+            const provider = new firebase.auth.GithubAuthProvider();
+            auth.signInWithPopup(provider).then(res => updateStats('github'));
         }
 
-        function showDashboard() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            document.body.style.background = "#121212";
+        // লগইন স্ট্যাটাস আপডেট (ডাটাবেসে সেভ করা)
+        function updateStats(type) {
+            db.ref('stats/' + type).transaction(count => (count || 0) + 1);
         }
 
-        function logout() {
-            auth.signOut().then(() => {
-                location.reload();
-            });
-        }
+        // পারসেন্টেজ ক্যালকুলেশন
+        db.ref('stats').on('value', snap => {
+            const data = snap.val() || {google:0, github:0, phone:0};
+            const total = data.google + data.github + data.phone || 1;
+            document.getElementById('google-stat').innerText = ((data.google/total)*100).toFixed(1);
+            document.getElementById('github-stat').innerText = ((data.github/total)*100).toFixed(1);
+            document.getElementById('phone-stat').innerText = ((data.phone/total)*100).toFixed(1);
+        });
 
-        // Background Auto Change
-        const imgs = ['https://images.unsplash.com/photo-1451187580459-43490279c0fa', 'https://images.unsplash.com/photo-1518770660439-4636190af475'];
-        let idx = 0;
-        setInterval(() => {
-            document.getElementById('bg').style.backgroundImage = ⁠ url('${imgs[idx]}') ⁠;
-            idx = (idx + 1) % imgs.length;
-        }, 5000);
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('user-name').innerText = user.displayName || user.email;
+            } else {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+        });
+
+        function logout() { auth.signOut(); }
     </script>
 </body>
 </html>
