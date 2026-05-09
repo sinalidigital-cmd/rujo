@@ -195,27 +195,6 @@
     
     <button type="button" class="btn" onclick="sendFeedback()" style="margin-top: 15px; width: 200px;">মেসেজ পাঠান</button>
 </div>
-
-<script>
-    function sendFeedback() {
-        const msg = document.getElementById('feedbackMsg').value;
-        const myNumber = "919332749691"; // আপনার নম্বর দেওয়া আছে
-        
-        if (msg.trim() === "") {
-            alert("দয়া করে কিছু লিখুন!");
-            return;
-        }
-
-        // হোয়াটসঅ্যাপ লিঙ্ক তৈরি
-        const wpLink = "https://wa.me/" + myNumber + "?text=" + encodeURIComponent("পোর্টাল ফিডব্যাক: " + msg);
-        
-        // নতুন ট্যাবে হোয়াটসঅ্যাপ ওপেন হবে
-        window.open(wpLink, '_blank');
-        
-        // টেক্সট বক্স খালি করে দেওয়া
-        document.getElementById('feedbackMsg').value = "";
-    }
-</script>
             </div>
         </div>
 
