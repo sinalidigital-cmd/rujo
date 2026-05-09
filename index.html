@@ -187,6 +187,35 @@
                 <a href="path/to/loan_form.pdf" download class="s-card">
                     <ion-icon name="document-outline" style="font-size: 30px;"></ion-icon><br>লোন আবেদন ফর্ম
                 </a>
+            <div style="margin: 50px 20px 20px 100px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--fino-blue);">
+    <h3 style="color: var(--fino-blue); margin-bottom: 10px;">আপনার মতামত বা রিকোয়েস্ট পাঠান</h3>
+    <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">নতুন কোনো সার্ভিস যোগ করতে চাইলে বা কিছু জানাতে চাইলে নিচে লিখুন:</p>
+    
+    <textarea id="feedbackMsg" placeholder="আপনার মেসেজ এখানে লিখুন..." style="width: 100%; height: 100px; padding: 12px; border: 1.5px solid #ddd; border-radius: 10px; outline: none; font-family: inherit; resize: none;"></textarea>
+    
+    <button type="button" class="btn" onclick="sendFeedback()" style="margin-top: 15px; width: 200px;">মেসেজ পাঠান</button>
+</div>
+
+<script>
+    function sendFeedback() {
+        const msg = document.getElementById('feedbackMsg').value;
+        const myNumber = "919332749691"; // আপনার নম্বর দেওয়া আছে
+        
+        if (msg.trim() === "") {
+            alert("দয়া করে কিছু লিখুন!");
+            return;
+        }
+
+        // হোয়াটসঅ্যাপ লিঙ্ক তৈরি
+        const wpLink = "https://wa.me/" + myNumber + "?text=" + encodeURIComponent("পোর্টাল ফিডব্যাক: " + msg);
+        
+        // নতুন ট্যাবে হোয়াটসঅ্যাপ ওপেন হবে
+        window.open(wpLink, '_blank');
+        
+        // টেক্সট বক্স খালি করে দেওয়া
+        document.getElementById('feedbackMsg').value = "";
+    }
+</script>
             </div>
         </div>
 
