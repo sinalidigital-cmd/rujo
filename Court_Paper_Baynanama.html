@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জমির বায়না নামা চুক্তিপত্র</title>
+    <style>
+        /* কম্পিউটার স্ক্রিনে দেখার এবং প্রিন্ট করার জন্য প্রফেশনাল স্টাইল */
+        body {
+            font-family: 'Siyam Rupali', 'Kalpurush', 'Nikosh', 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* কোর্ট পেপারের জন্য প্রিন্ট বা ডেক্সটপ লেআউট */
+        .court-paper {
+            background-color: #ffffff;
+            width: 210mm; /* A4 Size Width */
+            min-height: 297mm; /* A4 Size Height */
+            margin: 0 auto;
+            padding: 30mm 20mm 20mm 25mm; /* কোর্ট পেপারের উপরের ফাঁকা জায়গা মাথায় রেখে মার্জিন */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* স্ট্যাম্পের ওপরের ফাঁকা জায়গার জন্য নোটিশ (প্রিন্ট করার সময় এটা হাইড করা যাবে) */
+        .stamp-space-notice {
+            border: 1px dashed #ff0000;
+            color: #ff0000;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #111;
+            margin-bottom: 30px;
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #000;
+            display: block;
+        }
+
+        .input-field {
+            font-weight: normal;
+            color: #333;
+        }
+
+        /* টেবিল স্টাইল */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #111;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            width: 25%;
+        }
+
+        ol {
+            margin: 0;
+            padding-left: 22px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* স্বাক্ষর সেকশন */
+        .signature-container {
+            margin-top: 60px;
+            width: 100%;
+        }
+
+        .signature-box {
+            width: 45%;
+            float: left;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .signature-box.right {
+            float: right;
+        }
+
+        .line {
+            border-top: 1px solid #000;
+            width: 80%;
+            margin: 0 auto 10px auto;
+        }
+
+        .witness-section {
+            margin-top: 40px;
+            clear: both;
+        }
+
+        .witness-list {
+            margin-top: 15px;
+        }
+
+        .witness-item {
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* প্রিন্ট করার সময় অপ্রয়োজনীয় জিনিস হাইড করার জন্য */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .court-paper {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+            }
+            .stamp-space-notice {
+                display: none; /* প্রিন্ট করার সময় লাল বক্সটি আসবে না */
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        /* এডিটেবল লেখার জন্য স্টাইল */
+        [contenteditable="true"] {
+            border-bottom: 1px dashed #999;
+            padding: 0 5px;
+            background-color: #fffcf0;
+        }
+        [contenteditable="true"]:focus {
+            outline: 2px solid #007bff;
+            background-color: #fff;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .print-btn {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .print-btn:hover {
+            background-color: #004085;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container no-print">
+        <button class="print-btn" onclick="window.print()">সরাসরি প্রিন্ট করুন (Print)</button>
+        <p style="font-size: 13px; color: #666; margin-top: 5px;">হলুদ রঙের হালকা ব্যাকগ্রাউন্ড দেওয়া লেখাগুলোতে ক্লিক করে আপনি ডেক্সটপেই সরাসরি টাইপ বা এডিট করতে পারবেন।</p>
+    </div>
+
+    <div class="court-paper">
+        <!-- কোর্ট পেপার বা স্ট্যাম্পের উপরের ফাকা অংশ বোঝানোর জন্য -->
+        <div class="stamp-space-notice">
+            [ কোর্ট পেপার / স্ট্যাম্পের প্রথম পাতার জন্য ওপরের এই অংশটি ফাঁকা রাখা হয়েছে। প্রিন্ট করার সময় এই লাল নোটিশটি আসবে না। ]
+        </div>
+
+        <h1>জমির বায়না নামা চুক্তিপত্র</h1>
+
+        <!-- ১ম পক্ষ -->
+        <div class="section">
+            <span class="section-title">১ম পক্ষ (বিক্রেতা):</span>
+            <b>নাম:</b> <span class="input-field" contenteditable="true">রাজেশ মজুমদার</span><br>
+            <b>পিতা/স্বামী:</b> <span class="input-field" contenteditable="true">......................................................</span><br>
+            <b>ঠিকানা:</b> <span class="input-field" contenteditable="true">তাহেরপুর, নদীয়া, পশ্চিমবঙ্গ।</span>
+        </div>
+
+        <!-- ২য় পক্ষ -->
+        <div class="section">
+            <span class="section-title">২য় পক্ষ (ক্রেতা):</span>
+            <b>নাম:</b> <span class="input-field" contenteditable="true">......................................................</span><br>
+            <b>পিতা/স্বামী:</b> <span class="input-field" contenteditable="true">......................................................</span><br>
+            <b>ঠিকানা:</b> <span class="input-field" contenteditable="true">......................................................</span>
+        </div>
+
+        <!-- জমির বিবরণ -->
+        <div class="section">
+            <span class="section-title">জমির তফসিল ও বিবরণ:</span>
+            <p>অদ্যকার চুক্তির অধীন বিক্রয়যোগ্য জমিটি নিম্নরূপ তফসিল ভুক্ত:</p>
+            <table>
+                <tr>
+                    <th>মৌজা</th>
+                    <td contenteditable="true">......................</td>
+                    <th>জে. এল. নং</th>
+                    <td contenteditable="true">......................</td>
+                </tr>
+                <tr>
+                    <th>খতিয়ান নং</th>
+                    <td contenteditable="true">......................</td>
+                    <th>দাগ নং</th>
+                    <td contenteditable="true">......................</td>
+                </tr>
+                <tr>
+                    <th>জমির পরিমাণ</th>
+                    <td colspan="3" contenteditable="true">............................................................</td>
+                </tr>
+                <tr>
+                    <th>অবস্থান</th>
+                    <td colspan="3" contenteditable="true">তাহেরপুর, নদীয়া।</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- শর্তাবলী -->
+        <div class="section">
+            <span class="section-title">চুক্তির শর্তাবলী:</span>
+            <ol>
+                <li>উক্ত জমির মোট বিক্রয় মূল্য <span contenteditable="true">......................</span> টাকা ধার্য করা হইল।</li>
+                <li>অদ্য বায়না বাবদ ক্রেতা বিক্রেতাকে নগদ/চেক মারফত <span contenteditable="true">......................</span> টাকা প্রদান করিলেন এবং বিক্রেতা তাহা বুঝিয়া পাইলেন।</li>
+                <li>আগামী <span contenteditable="true">....../....../২০......</span> তারিখের মধ্যে অবশিষ্ট <span contenteditable="true">......................</span> টাকা পরিশোধ করিয়া বিক্রেতা জমি রেজিস্ট্রি করিয়া দিতে বাধ্য থাকিবেন।</li>
+                <li>নির্ধারিত সময়ের মধ্যে দলিল সম্পাদন না করিলে আইনগত ব্যবস্থা গ্রহণ করা যাইবে।</li>
+            </ol>
+        </div>
+
+        <!-- স্বাক্ষর -->
+        <div class="signature-container">
+            <div class="signature-box">
+                <div class="line"></div>
+                <b>১ম পক্ষ (বিক্রেতার স্বাক্ষর)</b>
+            </div>
+            <div class="signature-box right">
+                <div class="line"></div>
+                <b>২য় পক্ষ (ক্রেতার স্বাক্ষর)</b>
+            </div>
+        </div>
+
+        <!-- সাক্ষী সেকশন -->
+        <div class="witness-section">
+            <span class="section-title">সাক্ষীগণের স্বাক্ষর:</span>
+            <div class="witness-list">
+                <div class="witness-item">১. <span contenteditable="true">....................................................................................</span></div>
+                <div class="witness-item">২. <span contenteditable="true">....................................................................................</span></div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
