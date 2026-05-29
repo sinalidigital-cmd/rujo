@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fino Payments Bank Ltd - Official Form Taherpur</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        @page { size: A4; margin: 10mm; }
+        body { font-family: 'Courier New', Courier, monospace; background: #e0e0e0; margin: 0; padding: 20px; }
+        .a4-container { 
+            width: 210mm; min-height: 297mm; margin: auto; background: white; 
+            padding: 40px; border: 2px solid #000; box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+
+        /* আপনার ওয়ার্ড ফাইলের মতো হেডার ডিজাইন */
+        .header-main { text-align: center; border-bottom: 2px solid #b32025; padding-bottom: 10px; margin-bottom: 20px; position: relative; }
+        .header-main h1 { color: #b32025; margin: 0; font-size: 24px; text-decoration: underline; }
+        .branch-name { font-weight: bold; margin-top: 5px; font-size: 16px; }
+
+        .photo-frame { 
+            position: absolute; right: 0; top: 0; width: 120px; height: 140px; 
+            border: 1px solid #000; display: flex; align-items: center; justify-content: center; 
+            text-align: center; font-size: 10px; background: #f9f9f9; cursor: pointer;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+        /* ওয়ার্ড ফাইলের কমা এবং ড্যাশ স্টাইল */
+        .word-style-line { border: none; border-bottom: 1px dotted #000; width: 100%; padding: 5px; font-family: inherit; font-size: 15px; outline: none; }
+        .section-title { font-weight: bold; text-decoration: underline; margin: 20px 0 10px 0; font-size: 17px; text-transform: uppercase; }
+
+        .flex-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 15px; }
+        label { font-weight: bold; white-space: nowrap; }
+
+        /* জিপিএস লোকেশন বক্স */
+        .gps-section { background: #fff2f2; border: 1px dashed #b32025; padding: 10px; margin: 15px 0; }
+        .btn-gps { background: #b32025; color: white; border: none; padding: 5px 10px; cursor: pointer; font-size: 12px; }
+
+        .declaration-text { margin-top: 20px; font-size: 14px; line-height: 1.6; text-align: justify; border: 1px solid #eee; padding: 10px; }
+
+        .sig-table { width: 100%; margin-top: 40px; }
+        .sig-table td { border: none; width: 50%; padding-top: 30px; text-align: center; font-weight: bold; }
+
+        .office-box { border: 3px double #b32025; padding: 15px; margin-top: 30px; background: #fafafa; }
+
+        .no-print { text-align: center; margin-top: 30px; padding-bottom: 50px; }
+        .btn-excel { background: #217346; color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .btn-print { background: #b32025; color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+
+        @media print { .no-print { display: none; } body { padding: 0; background: white; } .a4-container { border: none; box-shadow: none; width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="a4-container">
+    <div class="header-main">
+        <h1>ফিনো পেমেন্টস ব্যাঙ্ক (Fino Payments Bank Ltd.)</h1>
+        <div class="branch-name">( শাখার নাম / Branch Name: - TAHERPUR (BC) )</div>
+        <p>আবেদন ফর্ম (Application Form)</p>
+        
+        <div class="photo-frame" onclick="document.getElementById('pInp').click()">
+            <img id="pImg" src=""><span id="pTxt">আবেদনকারীর ছবি<br>(Photo)</span>
+            <input type="file" id="pInp" hidden accept="image/*" onchange="preview(this)">
+        </div>
+    </div>
+
+    <form id="fullFinoForm">
+        <div class="section-title">বিভাগ ১ : ব্যক্তিগত তথ্য (Personal Information)</div>
+        
+        <div class="flex-row">
+            <label>আবেদনকারীর নাম (Full Name) :</label>
+            <input type="text" id="full_name" class="word-style-line">
+        </div>
+
+        <div class="flex-row">
+            <label>পিতার / স্বামীর নাম (Father's/Spouse's Name) :</label>
+            <input type="text" id="father_name" class="word-style-line">
+        </div>
+
+        <div class="flex-row">
+            <label>জন্ম তারিখ (Date of Birth) :</label>
+            <input type="date" id="dob" class="word-style-line">
+            <label>জাতীয়তা (Nationality) :</label>
+            <input type="text" id="nationality" value="ভারতীয়" class="word-style-line" readonly>
+        </div>
+
+        <div class="flex-row">
+            <label>লিঙ্গ (Gender) :</label>
+            <select id="gender" class="word-style-line">
+                <option>পুরুষ (Male)</option><option>মহিলা (Female)</option><option>অন্যান্য (Other)</option>
+            </select>
+            <label>বৈবাহিক অবস্থা (Marital Status) :</label>
+            <select id="marital" class="word-style-line">
+                <option>বিবাহিত (Married)</option><option>অবিবাহিত (Unmarried)</option>
+            </select>
+        </div>
+
+        <div class="section-title">বিভাগ ২ : যোগাযোগের তথ্য (Contact and ID Details)</div>
+        
+        <div class="flex-row">
+            <label>স্থায়ী ঠিকানা (Permanent Address) :</label>
+            <input type="text" id="p_addr" class="word-style-line">
+        </div>
+
+        <div class="flex-row">
+            <label>রাজ্য (State) :</label>
+            <select id="state_select" class="word-style-line">
+                <option>West Bengal</option><option>Bihar</option><option>Jharkhand</option><option>Assam</option>
+            </select>
+            <label>জেলা (District) :</label>
+            <select id="dist_select" class="word-style-line">
+                <option>Nadia</option><option>Murshidabad</option><option>North 24 Parganas</option><option>Hooghly</option>
+            </select>
+        </div>
+
+        <div class="gps-section">
+            <label>📍 লাইভ লোকেশন (Live GPS) :</label>
+            <div class="flex-row">
+                <input type="text" id="lat" placeholder="Latitude" class="word-style-line" readonly>
+                <input type="text" id="lng" placeholder="Longitude" class="word-style-line" readonly>
+                <button type="button" class="btn-gps" onclick="getLocation()">লোকেশন নিন</button>
+            </div>
+        </div>
+
+        <div class="flex-row">
+            <input type="checkbox" onclick="if(this.checked)document.getElementById('c_addr').value=document.getElementById('p_addr').value">
+            <label>স্থায়ী ঠিকানার মতো একই (Same as Above)</label>
+        </div>
+
+        <div class="flex-row">
+            <label>বর্তমান ঠিকানা (Current Address) :</label>
+            <input type="text" id="c_addr" class="word-style-line">
+        </div>
+
+        <div class="flex-row">
+            <label>মোবাইল নম্বর (Mobile Number) :</label>
+            <input type="text" id="mobile" class="word-style-line">
+            <label>ইমেইল আইডি (Email ID) :</label>
+            <input type="text" id="email" class="word-style-line">
+        </div>
+
+        <div class="flex-row">
+            <label>প্যান কার্ড নম্বর (PAN Card Number) :</label>
+            <input type="text" id="pan" class="word-style-line">
+            <label>আধার নম্বর (Aadhaar Number) :</label>
+            <input type="text" id="aadhaar" class="word-style-line">
+        </div>
+
+        <div class="section-title">বিভাগ ৩ : পরিষেবার বিবরণ (Service/Loan Details)</div>
+        <div class="flex-row">
+            <label>আবেদনের উদ্দেশ্য :</label>
+            <input type="text" id="purpose" class="word-style-line" placeholder="লোন / অ্যাকাউন্ট">
+        </div>
+        <div class="flex-row">
+            <label>লোনের পরিমাণ (Amount) : ₹</label>
+            <input type="text" id="loan_amt" class="word-style-line">
+            <label>সময়কাল :</label>
+            <input type="text" id="tenure" class="word-style-line">
+        </div>
+
+        <div class="section-title">বিভাগ ৪ : ঘোষণা এবং সম্মতি (Declaration and Consent)</div>
+        <div class="declaration-text">
+            আমি এতদ্বারা ঘোষণা করছি যে উপরে প্রদত্ত সমস্ত তথ্য আমার জ্ঞান ও বিশ্বাস অনুযায়ী সত্য এবং সঠিক। আমি ফিনো পেমেন্টস ব্যাঙ্ককে আমার দেওয়া তথ্যের সত্যতা যাচাই করার অনুমতি দিচ্ছি। আমি সম্মতি দিচ্ছি যে ব্যাঙ্ক আমার আবেদন গ্রহণ বা প্রত্যাখ্যান করার সম্পূর্ণ অধিকার রাখে। আমি ব্যাঙ্কের নিয়মাবলী এবং শর্তাবলী মেনে চলব।
+        </div>
+
+        <table class="sig-table">
+            <tr>
+                <td style="border-top: 1px solid #000;">তারিখ (Date)</td>
+                <td style="border-top: 1px solid #000;">আবেদনকারীর স্বাক্ষর (Applicant's Signature)</td>
+            </tr>
+        </table>
+
+        <div class="office-box">
+            <div style="font-weight: bold; margin-bottom: 10px;">👉 অফিস ব্যবহারের জন্য (For Office Use Only)</div>
+            <div class="flex-row">
+                <label>ভেরিফিকেশন স্ট্যাটাস :</label>
+                <select id="status_final" class="word-style-line">
+                    <option value="Verified">Verified (ভেরিফাইড)</option>
+                    <option value="Pending">Pending (পেন্ডিং)</option>
+                </select>
+                <label>স্বাক্ষর :</label>
+                <input type="text" id="off_sign" class="word-style-line">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="no-print">
+    <button class="btn-excel" onclick="saveData()">আবেদন জমা দিন ও এক্সেল সেভ করুন (Save to Excel)</button>
+    <button class="btn-print" onclick="window.print()">প্রিন্ট করুন</button>
+</div>
+
+<script>
+    function preview(input) {
+        if (input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('pImg').src = e.target.result;
+                document.getElementById('pImg').style.display = 'block';
+                document.getElementById('pTxt').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                document.getElementById('lat').value = pos.coords.latitude;
+                document.getElementById('lng').value = pos.coords.longitude;
+                alert("লোকেশন সফলভাবে আপডেট হয়েছে!");
+            });
+        }
+    }
+
+    // এক্সেল সেভ করার উন্নত ফাংশন
+    function saveData() {
+        const formData = {
+            "আবেদনকারীর নাম": document.getElementById('full_name').value,
+            "পিতার নাম": document.getElementById('father_name').value,
+            "জন্ম তারিখ": document.getElementById('dob').value,
+            "লিঙ্গ": document.getElementById('gender').value,
+            "মোবাইল": document.getElementById('mobile').value,
+            "আধার": document.getElementById('aadhaar').value,
+            "প্যান": document.getElementById('pan').value,
+            "স্থায়ী ঠিকানা": document.getElementById('p_addr').value,
+            "Latitude": document.getElementById('lat').value,
+            "Longitude": document.getElementById('lng').value,
+            "লোনের পরিমাণ": document.getElementById('loan_amt').value,
+            "স্ট্যাটাস": document.getElementById('status_final').value
+        };
+
+        const ws = XLSX.utils.json_to_sheet([formData]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "ApplicationData");
+        
+        // ফাইল নাম হিসেবে কাস্টমারের নাম ব্যবহার
+        const fileName = "Fino_" + (document.getElementById('full_name').value || "Entry") + ".xlsx";
+        XLSX.writeFile(wb, fileName);
+        
+        alert("এক্সেল ফাইলে সব তথ্য সেভ করা হয়েছে!");
+    }
+</script>
+</body>
+</html>
