@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লোন রিকভারি খাতা | Rajesh Digital 24</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --blue: #1e3a8a; --red: #ef4444; --bg: #f1f5f9; --white: #ffffff; }
+        body { margin: 0; font-family: 'Hind Siliguri', sans-serif; background: var(--bg); padding: 20px; display: flex; justify-content: center; }
+        
+        .container { width: 100%; max-width: 900px; }
+        .headline { background: var(--red); color: white; padding: 10px; font-weight: bold; font-size: 16px; border-bottom: 2px solid #fff; text-align: center; border-radius: 10px 10px 0 0; }
+        
+        header { background: var(--white); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--blue); }
+        .card { background: white; padding: 30px; border-radius: 0 0 20px 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .inp { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; }
+        .btn-auth { width: 100%; padding: 12px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-auth:hover { background: #1e40af; }
+        
+        /* ড্যাশবোর্ড রিপোর্ট বক্স */
+        .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .rep-card { padding: 15px; border-radius: 10px; color: white; text-align: center; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background: var(--blue); color: white; }
+        
+        .btn-delete { background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-delete:hover { background: #b91c1c; }
+
+        @media print { .no-print, .btn-delete { display: none !important; } body { background: white; padding: 0; } .card { box-shadow: none; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="headline no-print">
+        <span>💰 লোন কালেকশন ও রিকভারি খাতা - রাজেশ ডিজিটাল ২৪ 💰</span>
+    </div>
+
+    <header>
+        <b style="font-size:22px; color:var(--blue)">RAJESH DIGITAL 24</b>
+        <div id="clock" style="font-weight:bold; color: #555;"></div>
+    </header>
+
+    <div class="card">
+        <div class="report-grid">
+            <div class="rep-card" style="background: #22c55e;">আজকের কালেকশন<br><span id="today-total">0</span> টাকা</div>
+            <div class="rep-card" style="background: #3b82f6;">সর্বমোট রিকভারি<br><span id="all-total">0</span> টাকা</div>
+            <div class="rep-card" style="background: #f97316;">বাজারে বাকি মূলধন<br><span id="rem-total">0</span> টাকা</div>
+        </div>
+
+        <div class="no-print" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+            <h3 style="margin-top: 0; color: var(--blue);">💰 নতুন কালেকশন এন্ট্রি</h3>
+            <div class="grid-3" style="align-items: center;">
+                <input type="text" id="rec-name" class="inp" placeholder="কাস্টমারের নাম">
+                <input type="number" id="rec-amt" class="inp" placeholder="টাকার পরিমাণ (₹)">
+                <button class="btn-auth" onclick="addRecovery()">জমা নিন</button>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+            <h3 style="margin: 0; color: var(--blue);">📜 কাস্টমার কালেকশন লেজার (হিস্ট্রি)</h3>
+            <button class="btn-auth no-print" onclick="window.print()" style="width: auto; padding: 8px 15px; background: #10b981;">🖨️ প্রিন্ট খাতা</button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>কাস্টমারের নাম</th>
+                    <th>পেমেন্ট সংখ্যা</th>
+                    <th>তারিখ ও জমার হিস্ট্রি</th>
+                    <th>মোট জমা টাকা</th>
+                    <th class="no-print">অ্যাকশন</th>
+                </tr>
+            </thead>
+            <tbody id="recovery-body">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // লোকাল স্টোরেজ থেকে ডেটা লোড করা (যাতে ডেটা মুছে না যায়)
+    let recoveryData = JSON.parse(localStorage.getItem('raj_rec')) || {};
+    const TOTAL_INVESTMENT = 100000; // আপনার মোট মূলধন ১ লক্ষ টাকা (প্রয়োজনে পরিবর্তন করতে পারেন)
+
+    window.onload = () => {
+        // লাইভ ঘড়ি সেট করা
+        setInterval(() => { 
+            document.getElementById('clock').innerText = new Date().toLocaleString('bn-BD', { hour12: true }); 
+        }, 1000);
+        renderRecTable();
+    };
+
+    // নতুন কালেকশন এন্ট্রি করার ফাংশন
+    function addRecovery() {
+        const name = document.getElementById('rec-name').value.trim();
+        const amt = parseFloat(document.getElementById('rec-amt').value);
+        
+        // বর্তমান তারিখ এবং সময় সেট করা
+        const now = new Date();
+        const dt = now.toLocaleDateString('bn-BD');
+        const tm = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
+        const fullStamp = ⁠ ${dt} (${tm}) ⁠;
+
+        if (!name || isNaN(amt) || amt <= 0) {
+            alert("দয়া করে সঠিক নাম এবং টাকার পরিমাণ লিখুন!");
+            return;
+        }
+
+        if (!recoveryData[name]) {
+            // কাস্টমার নতুন হলে
+            recoveryData[name] = { 
+                count: 1, 
+                total: amt, 
+                history: [⁠ ₹${amt} - ${fullStamp} ⁠],
+                lastDate: dt
+            };
+        } else {
+            // কাস্টমার আগে থেকেই থাকলে তার অ্যাকাউন্টে যোগ হবে
+            recoveryData[name].count++;
+            recoveryData[name].total += amt;
+            recoveryData[name].history.push(⁠ ₹${amt} - ${fullStamp} ⁠);
+            recoveryData[name].lastDate = dt;
+        }
+
+        // ব্রাউজারে পার্মানেন্টলি সেভ করা
+        localStorage.setItem('raj_rec', JSON.stringify(recoveryData));
+        
+        // ইনপুট বক্স খালি করা ও টেবিল আপডেট করা
+        document.getElementById('rec-name').value = '';
+        document.getElementById('rec-amt').value = '';
+        renderRecTable();
+    }
+
+    // ভুল করে এন্ট্রি হলে কাস্টমার ডিলিট করার সুবিধা
+    function deleteCustomer(name) {
+        if(confirm(⁠ আপনি কি নিশ্চিত যে "${name}" এর সমস্ত রেকর্ড ডিলিট করতে চান? ⁠)) {
+            delete recoveryData[name];
+            localStorage.setItem('raj_rec', JSON.stringify(recoveryData));
+            renderRecTable();
+        }
+    }
+
+    // টেবিল এবং ক্যালকুলেশন বক্স রেন্ডার করার ফাংশন
+    function renderRecTable() {
+        const b = document.getElementById('recovery-body');
+        b.innerHTML = '';
+        
+        let overallTotal = 0;
+        let todayTotal = 0;
+        const todayStr = new Date().toLocaleDateString('bn-BD');
+
+        // যদি কোনো ডেটা না থাকে
+        if (Object.keys(recoveryData).length === 0) {
+            b.innerHTML = ⁠ <tr><td colspan="5" style="text-align:center; color:#999; font-weight:bold;">খাতায় এখনো কোনো কালেকশন এন্ট্রি করা হয়নি।</td></tr> ⁠;
+            document.getElementById('today-total').innerText = '0';
+            document.getElementById('all-total').innerText = '0';
+            document.getElementById('rem-total').innerText = TOTAL_INVESTMENT;
+            return;
+        }
+
+        for (let k in recoveryData) {
+            const d = recoveryData[k];
+            overallTotal += d.total;
+
+            // আজকের জমার পরিমাণ হিসাব (আজকের ডেট ম্যাচ করে)
+            // হিস্ট্রি থেকে আজকের জমাগুলো ফিল্টার করা
+            d.history.forEach(item => {
+                if(item.includes(todayStr)) {
+                    // স্ট্রিং থেকে টাকার পরিমাণ আলাদা করা
+                    const extractAmt = parseFloat(item.split(' - ')[0].replace('₹', '')) || 0;
+                    todayTotal += extractAmt;
+                }
+            });
+
+            // টেবিল রো তৈরি
+            b.innerHTML += `
+                <tr>
+                    <td><b>${k}</b></td>
+                    <td style="font-weight:600; color:#444;">${d.count} বার</td>
+                    <td style="font-size:13px; color:#555; line-height:1.6;">${d.history.join('<br>')}</td>
+                    <td style="color:green; font-weight:bold; font-size:16px;">₹${d.total}</td>
+                    <td class="no-print"><button class="btn-delete" onclick="deleteCustomer('${k}')">❌ ডিলিট</button></td>
+                </tr>`;
+        }
+
+        // ড্যাশবোর্ড বক্সের ভ্যালু আপডেট
+        document.getElementById('today-total').innerText = todayTotal;
+        document.getElementById('all-total').innerText = overallTotal;
+        
+        let remaining = TOTAL_INVESTMENT - overallTotal;
+        document.getElementById('rem-total').innerText = remaining < 0 ? 0 : remaining;
+    }
+</script>
+
+</body>
+</html>
