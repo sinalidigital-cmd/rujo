@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>দোকান ভাড়ার চুক্তিপত্র</title>
+<style>
+  /* Court Paper Print Page Setup */
+  @page {
+    size: A4;
+    margin: 60mm 12mm 10mm 12mm; /* 60mm top margin for Court Stamp */
+  }
+  
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'SolaimanLipi', 'Kalpurush', 'Noto Sans Bengali', system-ui, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.35;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f9;
+  }
+
+  /* Toolbar styling for web browser view */
+  .no-print {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #1e293b;
+    color: #fff;
+    padding: 10px 15px;
+    display: block;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    font-family: system-ui, sans-serif;
+  }
+
+  .btn {
+    border: none;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-copy {
+    background-color: #0284c7;
+    color: white;
+  }
+
+  .btn-copy:hover {
+    background-color: #0369a1;
+  }
+
+  .btn-print {
+    background-color: #16a34a;
+    color: white;
+  }
+
+  .btn-print:hover {
+    background-color: #15803d;
+  }
+
+  /* Paper Container for Screen Preview */
+  .paper-container {
+    background: #fff;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 60px auto 30px auto;
+    padding: 60mm 12mm 10mm 12mm; /* Exactly matching @page print margin */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  @media print {
+    body {
+      background-color: #fff;
+    }
+    .no-print {
+      display: none !important;
+    }
+    .paper-container {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+  }
+
+  .document-title {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 10px;
+  }
+
+  .party-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+  }
+
+  .party-table td {
+    vertical-align: top;
+    padding: 1px 0;
+  }
+
+  .party-header {
+    font-weight: bold;
+    font-size: 10.5pt;
+    background-color: #f2f2f2;
+    padding: 2px 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 4px;
+    margin-top: 4px;
+  }
+
+  .field-label {
+    width: 130px;
+    font-weight: bold;
+  }
+
+  .preamble {
+    text-align: justify;
+    margin-top: 6px;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 10.5pt;
+    font-weight: bold;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 1px;
+  }
+
+  ol.terms {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  ol.terms li {
+    margin-bottom: 4px;
+    text-align: justify;
+  }
+
+  .declaration {
+    margin-top: 8px;
+    margin-bottom: 15px;
+    text-align: justify;
+  }
+
+  .signature-table {
+    width: 100%;
+    margin-top: 25px;
+    border-collapse: collapse;
+  }
+
+  .signature-table td {
+    width: 50%;
+    vertical-align: top;
+  }
+
+  .sig-line {
+    border-top: 1px dashed #000;
+    width: 80%;
+    margin-top: 25px;
+    padding-top: 3px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .witness-section {
+    margin-top: 15px;
+  }
+
+  .witness-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+  }
+
+  .witness-table td {
+    width: 50%;
+    vertical-align: top;
+    padding-right: 10px;
+  }
+
+  .bottom-print-container {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed #ccc;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Screen Top Bar with Copy and Print Actions -->
+  <div class="no-print">
+    <span>কোর্ট পেপারের চুক্তিপত্র (১ পেজে সাজানো)</span>
+    <button class="btn btn-copy" onclick="copyDocumentText()">📋 সম্পূর্ণ টেক্সট কপি করুন</button>
+    <button class="btn btn-print" onclick="window.print()">🖨️ সরাসরি প্রিন্ট করুন</button>
+  </div>
+
+  <div class="paper-container" id="agreement-content">
+
+    <div class="document-title">দোকান ভাড়ার চুক্তিপত্র</div>
+
+    <div class="party-header">১ম পক্ষ (দোকানের মালিক):</div>
+    <table class="party-table">
+      <tr>
+        <td class="field-label">নাম ও পিতা/স্বামী:</td>
+        <td>......................................................................................................................................</td>
+      </tr>
+      <tr>
+        <td class="field-label">ঠিকানা ও মোবাইল:</td>
+        <td>......................................................................................................................................</td>
+      </tr>
+      <tr>
+        <td class="field-label">আধার/ভোটার নং:</td>
+        <td>......................................................................................................................................</td>
+      </tr>
+    </table>
+
+    <div class="party-header">২য় পক্ষ (ভাড়াটিয়া):</div>
+    <table class="party-table">
+      <tr>
+        <td class="field-label">নাম ও পিতা/স্বামী:</td>
+        <td>......................................................................................................................................</td>
+      </tr>
+      <tr>
+        <td class="field-label">ঠিকানা ও মোবাইল:</td>
+        <td>......................................................................................................................................</td>
+      </tr>
+      <tr>
+        <td class="field-label">আধার/ভোটার নং:</td>
+        <td>......................................................................................................................................</td>
+      </tr>
+    </table>
+
+    <p class="preamble">
+      পরম করুণাময় ঈশ্বরের নামে চুক্তিপত্র আরম্ভ করিলাম। ১ম পক্ষ ...................................................................................................................... অবস্থিত দোকান ঘরের মালিক এবং ২য় পক্ষ উক্ত দোকান ভাড়া নিতে সম্মত হইয়া নিম্নলিখিত শর্তাবলীতে আবদ্ধ হইলেন:
+    </p>
+
+    <div class="section-title">শর্তাবলী:</div>
+
+    <ol class="terms">
+      <li><strong>মেয়াদ:</strong> চুক্তিটি ........................... হতে ........................... তারিখ পর্যন্ত (মোট ............. মাস/বছর) বলবৎ থাকিবে।</li>
+      <li><strong>ভাড়া:</strong> মাসিক ভাড়া ............................./- টাকা। ২য় পক্ষ প্রতি মাসের .................... তারিখের মধ্যে পরিশোধ করিবেন।</li>
+      <li><strong>জামানত:</strong> ২য় পক্ষ সিকিউরিটি ডিপোজিট বাবদ অফেরতযোগ্য/ফেরতযোগ্য ............................./- টাকা প্রদান করিলেন।</li>
+      <li><strong>বিদ্যুৎ বিল:</strong> ইলেকট্রিক বিল ২য় পক্ষকে সাব-মিটার/নিজস্ব মিটার অনুযায়ী নিজ দায়িত্বে মেটাতে হবে।</li>
+      <li><strong>ব্যবহার:</strong> ২য় পক্ষ দোকানে শুধুমাত্র .................................................................... ব্যবসা পরিচালনা করিতে পারিবেন।</li>
+      <li><strong>নোটিশ:</strong> দোকান খালি করিতে বা করাইতে চাহিলে কমপক্ষে .................... মাস পূর্বে লিখিত নোটিশ দিতে হইবে।</li>
+      <li><strong>উপ-ভাড়া:</strong> ২য় পক্ষ উক্ত দোকানটি অন্য কাহাকেও উপ-ভাড়া (Sub-let) দিতে পারিবেন না।</li>
+    </ol>
+
+    <p class="declaration">
+      আমরা উভয় পক্ষ সুস্থ মস্তিষ্কে ও সজ্ঞানে চুক্তিপত্রের সকল শর্ত পড়িয়া ও বুঝিয়া সাক্ষীগণের উপস্থিতিতে স্বাক্ষর করিলাম।
+    </p>
+
+    <table class="signature-table">
+      <tr>
+        <td align="center">
+          <div class="sig-line">১ম পক্ষের স্বাক্ষর (মালিক)</div>
+        </td>
+        <td align="center">
+          <div class="sig-line">২য় পক্ষের স্বাক্ষর (ভাড়াটিয়া)</div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="witness-section">
+      <div style="font-weight: bold; font-size: 10pt; margin-bottom: 4px; text-decoration: underline;">সাক্ষীগণের স্বাক্ষর:</div>
+      <table class="witness-table">
+        <tr>
+          <td>
+            <strong>১ম সাক্ষী:</strong> স্বাক্ষর: ...........................................<br>
+            নাম ও ঠিকানা: ....................................................
+          </td>
+          <td>
+            <strong>২য় সাক্ষী:</strong> স্বাক্ষর: ...........................................<br>
+            নাম ও ঠিকানা: ....................................................
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="bottom-print-container no-print">
+      <button class="btn btn-copy" onclick="copyDocumentText()">📋 সম্পূর্ণ টেক্সট কপি করুন</button>
+      <button class="btn btn-print" onclick="window.print()">🖨️ সরাসরি প্রিন্ট করুন</button>
+    </div>
+
+  </div>
+
+  <script>
+    function copyDocumentText() {
+      const element = document.getElementById('agreement-content');
+      const textToCopy = element.innerText;
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("কপি সফল হয়েছে! আপনি যেকোনো জায়গায় এখন এটি পেস্ট করতে পারবেন।");
+      }).catch(err => {
+        alert("কপি করা সম্ভব হয়নি, অনুগ্রহ করে ম্যানুয়ালি সিলেক্ট করে কপি করুন।");
+      });
+    }
+  </script>
+
+</body>
+</html>
