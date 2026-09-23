@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডেইলি রিপোর্ট ফরম্যাট</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #e5ddd5; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
+        .container { background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 480px; }
+        h2 { text-align: center; margin-bottom: 15px; color: #075e54; font-size: 18px; }
+        
+        /* হোয়াটসঅ্যাপ স্টাইলের ইনপুট রো */
+        .form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dotted #ccc; padding-bottom: 4px; }
+        .form-row label { font-size: 13px; font-weight: bold; color: #333; width: 60%; font-family: monospace; }
+        .form-row input { width: 38%; padding: 4px 6px; border: 1px solid #075e54; border-radius: 4px; font-size: 13px; font-family: monospace; font-weight: bold; text-align: right; }
+        
+        /* সম্পূর্ণ নাম পুরো দেখানোর জন্য চওড়া ইনপুট */
+        .form-row input.full-width { width: 100%; text-align: left; background-color: #f0f0f0; border-color: #ccc; cursor: not-allowed; }
+        
+        .section-gap { margin-bottom: 15px; }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+        .btn { width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; color: white; text-align: center; }
+        .btn-copy { background: #075e54; }
+        .btn-download { background: #128c7e; }
+        .btn-wa { background: #25D366; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>DAILY REPORT FORMAT</h2>
+
+    <div class="form-row">
+        <label style="width: 30%;">NAME :</label>
+        <input type="text" id="name" value="SONALI BISWAS" class="full-width" readonly>
+    </div>
+    <div class="form-row">
+        <label>DATE :</label>
+        <input type="text" id="date">
+    </div>
+    <div class="form-row">
+        <label>KO CODE :</label>
+        <input type="text" id="kocode" value="K40409445" readonly style="background-color: #f0f0f0;">
+    </div>
+    <div class="form-row section-gap">
+        <label>LOGIN TIME :</label>
+        <input type="text" id="logintime" placeholder="10:00 AM">
+    </div>
+
+    <div class="form-row">
+        <label>TOTAL TRANSATION :</label>
+        <input type="text" id="total_trans">
+    </div>
+    <div class="form-row">
+        <label>TOTAL WITHDRAWAL :</label>
+        <input type="text" id="total_with">
+    </div>
+    <div class="form-row">
+        <label>TOTAL DEPOSIT :</label>
+        <input type="text" id="total_dep">
+    </div>
+    <div class="form-row">
+        <label>FUND TRANSFER:</label>
+        <input type="text" id="fund_tf" value="00">
+    </div>
+    <div class="form-row">
+        <label>NO OF ONUS :</label>
+        <input type="text" id="onus">
+    </div>
+    <div class="form-row">
+        <label>NO OF OFFUS:</label>
+        <input type="text" id="offus">
+    </div>
+    <div class="form-row">
+        <label>NO OF ATM :</label>
+        <input type="text" id="atm">
+    </div>
+    <div class="form-row section-gap">
+        <label>NEFT:</label>
+        <input type="text" id="neft" value="00">
+    </div>
+
+    <div class="form-row">
+        <label>NO OF EKYC MINOR:</label>
+        <input type="text" id="ekyc_minor" value="0">
+    </div>
+    <div class="form-row">
+        <label>NO OF EKYC MEJOR :</label>
+        <input type="text" id="ekyc_mejor" value="0">
+    </div>
+    <div class="form-row section-gap">
+        <label>NO OF EKYC SUBMIT BRANCH :</label>
+        <input type="text" id="ekyc_branch">
+    </div>
+
+    <div class="form-row">
+        <label>NO OF RE-KYC :</label>
+        <input type="text" id="rekyc">
+    </div>
+    <div class="form-row">
+        <label>NO OF RE-KYC SUBMIT BRANCH:</label>
+        <input type="text" id="rekyc_branch">
+    </div>
+    <div class="form-row section-gap">
+        <label>NO OF RECOVERY:</label>
+        <input type="text" id="recovery">
+    </div>
+
+    <div class="form-row">
+        <label>APY :</label>
+        <input type="text" id="apy" value="0">
+    </div>
+    <div class="form-row">
+        <label>PMJJBY :</label>
+        <input type="text" id="pmjjby" value="0">
+    </div>
+    <div class="form-row section-gap">
+        <label>PMSBY :</label>
+        <input type="text" id="pmsby" value="0">
+    </div>
+
+    <div class="form-row">
+        <label>FD :</label>
+        <input type="text" id="fd">
+    </div>
+    <div class="form-row">
+        <label>RD :</label>
+        <input type="text" id="rd">
+    </div>
+    <div class="form-row">
+        <label>PASSBOOK PRINT :</label>
+        <input type="text" id="passbook">
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-copy" onclick="copyReport()">কপি করুন</button>
+        <button class="btn btn-download" onclick="downloadReport()">ডাউনলোড টেক্সট</button>
+        <button class="btn btn-wa" onclick="shareWhatsApp()">WhatsApp-এ শেয়ার</button>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        
+        document.getElementById('date').value = ${day}/${month}/${year};
+    };
+
+    function generateText() {
+        return `NAME : ${document.getElementById('name').value}
+DATE : ${document.getElementById('date').value}
+KO CODE : ${document.getElementById('kocode').value}
+LOGIN TIME : ${document.getElementById('logintime').value}
+
+TOTAL TRANSATION : ${document.getElementById('total_trans').value}
+TOTAL WITHDRAWAL : ${document.getElementById('total_with').value}
+TOTAL DEPOSIT : ${document.getElementById('total_dep').value}
+FUND TRANSFER:${document.getElementById('fund_tf').value}
+NO OF ONUS : ${document.getElementById('onus').value}
+NO OF OFFUS: ${document.getElementById('offus').value}
+NO OF ATM : ${document.getElementById('atm').value}
+NEFT:${document.getElementById('neft').value}
+
+NO OF EKYC MINOR:${document.getElementById('ekyc_minor').value}
+NO OF EKYC MEJOR :${document.getElementById('ekyc_mejor').value}
+NO OF EKYC SUBMIT BRANCH : ${document.getElementById('ekyc_branch').value}
+
+NO OF RE-KYC : ${document.getElementById('rekyc').value}
+NO OF RE-KYC SUBMIT BRANCH: ${document.getElementById('rekyc_branch').value}
+NO OF RECOVERY: ${document.getElementById('recovery').value}
+
+APY :${document.getElementById('apy').value}
+PMJJBY :${document.getElementById('pmjjby').value}
+PMSBY :${document.getElementById('pmsby').value}
+
+FD : ${document.getElementById('fd').value}
+RD : ${document.getElementById('rd').value}
+PASSBOOK PRINT : ${document.getElementById('passbook').value}`;
+    }
+
+    function copyReport() {
+        const text = generateText();
+        navigator.clipboard.writeText(text).then(() => {
+            alert("রিপোর্ট কপি করা হয়েছে!");
+        });
+    }
+
+    function downloadReport() {
+        const text = generateText();
+        const dateStr = document.getElementById('date').value.replace(/\//g, '-');
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = Daily_Report_${dateStr}.txt;
+        link.click();
+    }
+
+    function shareWhatsApp() {
+        const text = generateText();
+        const encodedText = encodeURIComponent(text);
+        window.open(https://api.whatsapp.com/send?text=${encodedText}, '_blank');
+    }
+</script>
+
+</body>
+</html>
