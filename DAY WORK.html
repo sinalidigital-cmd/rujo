@@ -8,29 +8,30 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #e5ddd5; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         .container { background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 480px; }
-        h2 { text-align: center; margin-bottom: 15px; color: #075e54; font-size: 18px; }
         
         /* হোয়াটসঅ্যাপ স্টাইলের ইনপুট রো */
         .form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dotted #ccc; padding-bottom: 4px; }
         .form-row label { font-size: 13px; font-weight: bold; color: #333; width: 60%; font-family: monospace; }
         .form-row input { width: 38%; padding: 4px 6px; border: 1px solid #075e54; border-radius: 4px; font-size: 13px; font-family: monospace; font-weight: bold; text-align: right; }
         
-        /* সম্পূর্ণ নাম পুরো দেখানোর জন্য চওড়া ইনপুট */
+        /* সম্পূর্ণ নাম দেখানোর জন্য চওড়া ইনপুট */
         .form-row input.full-width { width: 100%; text-align: left; background-color: #f0f0f0; border-color: #ccc; cursor: not-allowed; }
         
         .section-gap { margin-bottom: 15px; }
         
-        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-        .btn { width: 100%; padding: 10px; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; color: white; text-align: center; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; color: white; text-align: center; }
         .btn-copy { background: #075e54; }
+        .btn-copy:hover { background: #054840; }
         .btn-download { background: #128c7e; }
+        .btn-download:hover { background: #0d6e63; }
         .btn-wa { background: #25D366; }
+        .btn-wa:hover { background: #1da851; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>DAILY REPORT FORMAT</h2>
 
     <div class="form-row">
         <label style="width: 30%;">NAME :</label>
@@ -46,7 +47,7 @@
     </div>
     <div class="form-row section-gap">
         <label>LOGIN TIME :</label>
-        <input type="text" id="logintime" placeholder="10:00 AM">
+        <input type="text" id="logintime">
     </div>
 
     <div class="form-row">
@@ -135,20 +136,28 @@
     </div>
 
     <div class="btn-group">
-        <button class="btn btn-copy" onclick="copyReport()">কপি করুন</button>
-        <button class="btn btn-download" onclick="downloadReport()">ডাউনলোড টেক্সট</button>
-        <button class="btn btn-wa" onclick="shareWhatsApp()">WhatsApp-এ শেয়ার</button>
+        <button class="btn btn-copy" onclick="copyReport()">📋 কপি করুন</button>
+        <button class="btn btn-download" onclick="downloadReport()">📥 ডাউনলোড টেক্সট</button>
+        <button class="btn btn-wa" onclick="shareWhatsApp()">💬 WhatsApp-এ শেয়ার</button>
     </div>
 </div>
 
 <script>
+    // অটোমেটিক তারিখ ও সময় সেট করার ফংশন
     window.onload = function() {
         const today = new Date();
         const day = String(today.getDate()).padStart(2, '0');
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const year = today.getFullYear();
-        
         document.getElementById('date').value = ${day}/${month}/${year};
+
+        let hours = today.getHours();
+        const minutes = String(today.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        const formattedHours = String(hours).padStart(2, '0');
+        document.getElementById('logintime').value = ${formattedHours}:${minutes} ${ampm};
     };
 
     function generateText() {
@@ -183,27 +192,54 @@ RD : ${document.getElementById('rd').value}
 PASSBOOK PRINT : ${document.getElementById('passbook').value}`;
     }
 
+    // বিশ্বস্ত কপি মেথড (ডেসকটপ ও মোবাইলের জন্য)
     function copyReport() {
         const text = generateText();
-        navigator.clipboard.writeText(text).then(() => {
-            alert("রিপোর্ট কপি করা হয়েছে!");
-        });
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("রিপোর্ট কপি করা হয়েছে!");
+            }).catch(() => fallbackCopy(text));
+        } else {
+            fallbackCopy(text);
+        }
     }
 
+    function fallbackCopy(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert("রিপোর্ট কপি করা হয়েছে!");
+        } catch (err) {
+            alert("কপি করা যায়নি, অনুগ্রহ করে ম্যানুয়ালি কপি করুন।");
+        }
+        document.body.removeChild(textArea);
+    }
+
+    // ডাউনলোড টেক্সট ফাইল
     function downloadReport() {
         const text = generateText();
         const dateStr = document.getElementById('date').value.replace(/\//g, '-');
+        const filename = Daily_Report_${dateStr}.txt;
+        
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = Daily_Report_${dateStr}.txt;
+        link.download = filename;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
     }
 
+    // WhatsApp শেয়ার
     function shareWhatsApp() {
         const text = generateText();
         const encodedText = encodeURIComponent(text);
-        window.open(https://api.whatsapp.com/send?text=${encodedText}, '_blank');
+        window.open(https://web.whatsapp.com/}, '_blank');
     }
 </script>
 
